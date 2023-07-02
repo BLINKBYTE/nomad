@@ -1,0 +1,79 @@
+--- #https://certbot.eff.org/instructions?ws=other&os=ubuntuother
+
+  - name: "Create required directory /etc/letsencrypt"
+    file:
+      path: "/etc/letsencrypt"
+      state: directory
+      owner: "{{nomad_user_name}}"
+      group: "{{nomad_user_name}}"
+      mode: u=rwx,g=x,o=x
+
+  - name: "Create required directories in /etc/letsencrypt"
+    file:
+      path: "/etc/letsencrypt/{{ item }}"
+      state: directory
+      owner: "{{nomad_user_name}}"
+      group: "{{nomad_user_name}}"
+      mode: u=rwx,g=x,o=x
+    with_items:
+    - account
+    - certs
+    - csrs
+    - keys
+    - archive
+
+  - name: update apt
+    apt:
+      update_cache: true
+
+  - name: ensure snapd
+    package:
+      name: snap
+
+  
+  - name: ensure certbot
+    community.general.snap:
+      name: certbot
+      classic: true
+
+  - name: link snapbot
+    file:
+      state: link
+      src: /snap/bin/certbot
+      dest: /usr/bin/certbot
+
+  - name: Register certbot
+    shell: |
+      certbot -n register --agree-tos --email james.sandford@blinkbyte.co.uk
+      touch /etc/letsencrypt/.registered
+    args:
+      creates: /etc/letsencrypt/.registered
+
+  - name: Setup cronjob for renewal
+    cron:
+      name: certbot-renewal
+      job: "/bin/bash -lc 'certbot -q renew'"
+      minute: "0"
+      hour: "14"
+
+  - name: 'Get certificate'
+    command: 'certbot certonly --non-interactive --standalone  --agree-tos  --preferred-chain "ISRG Root X1" -d {{ nomad_api_addr }}'
+    args:
+      creates: '/etc/letsencrypt/live/{{ nomad_api_addr }}'
+
+  - name: ensure perms for dir
+    file: 
+      name: "{{ item }}"
+      owner: "{{nomad_user_name}}"
+      group: "{{nomad_user_name}}"
+      state: directory
+    with_items:
+      - /etc/letsencrypt/live/
+
+  - name: ensure perms for files
+    file: 
+      name: "{{ item }}"
+      owner: "{{nomad_user_name}}"
+      group: "{{nomad_user_name}}"
+    with_items:
+      - /etc/letsencrypt/live/{{ nomad_api_addr }}/privkey.pem

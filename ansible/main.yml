@@ -1,0 +1,12 @@
+---
+
+- name: setupIP
+  hosts: server
+  vars_prompt:
+    - name: ansible_password
+      prompt: what is the password?
+      private: true 
+  become: true
+  roles:
+    - make_users
+    - nomad-server
