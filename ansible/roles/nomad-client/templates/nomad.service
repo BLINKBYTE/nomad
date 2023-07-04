@@ -1,0 +1,14 @@
+[Unit]
+Description="HashiCorp nomad - A tool for managing secrets" Documentation=https://www.nomadproject.io/docs/
+Requires=network-online.target
+After=network-online.target ConditionFileNotEmpty=/etc/vault.d/config.hcl StartLimitIntervalSec=60
+StartLimitBurst=3
+
+[Service]
+User=root
+Group=root
+ExecStart=/usr/local/bin/nomad agent -config=/etc/nomad.d/config.hcl 
+LimitMEMLOCK=infinity
+
+[Install]
+WantedBy=multi-user.target

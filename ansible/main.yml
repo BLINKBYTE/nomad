@@ -10,3 +10,15 @@
   roles:
     - make_users
     - nomad-server
+
+- name: setupIP
+  hosts: client
+  vars_prompt:
+    - name: ansible_password
+      prompt: what is the password?
+      private: true 
+  become: true
+  roles:
+    - make_users
+    - nomad-client
+    - CNI_plugins

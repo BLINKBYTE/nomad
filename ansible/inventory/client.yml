@@ -1,0 +1,9 @@
+---
+all:
+  hosts:
+  children:
+    client:
+      hosts:
+        192.168.68.100:
+          ansible_user: ubuntu
+          architecture: amd64

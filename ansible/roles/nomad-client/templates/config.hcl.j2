@@ -11,9 +11,15 @@ advertise {
   serf = "{{ansible_hostname}}:5648" # non-default ports may be specified
 }
 
-server {
-  enabled          = true
-  bootstrap_expect = 1
+client {
+  enabled       = true
+  servers       = ["192.168.68.112"]
+}
+
+plugin "raw_exec" {
+  config {
+    enabled = true
+  }
 }
 
 consul {
