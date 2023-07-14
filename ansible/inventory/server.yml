@@ -4,6 +4,12 @@ all:
   children:
     server:
       hosts:
-        192.168.68.112:
+        192.168.68.117:
           ansible_user: ubuntu
-          architecture: arm64
+          server_name: Bahamut
+        192.168.68.118:
+          ansible_user: ubuntu
+          server_name: goodkingmogglemogxii
+        192.168.68.119:
+          ansible_user: ubuntu
+          server_name: leviathan

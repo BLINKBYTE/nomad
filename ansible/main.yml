@@ -1,24 +1,20 @@
 ---
 
-- name: setupIP
-  hosts: server
-  vars_prompt:
-    - name: ansible_password
-      prompt: what is the password?
-      private: true 
+- name: nomad-base
+  hosts: all
   become: true
   roles:
     - make_users
+    - nomad-base
+
+- name: setup server
+  hosts: server
+  become: true
+  roles:
     - nomad-server
 
-- name: setupIP
+- name: setup client 
   hosts: client
-  vars_prompt:
-    - name: ansible_password
-      prompt: what is the password?
-      private: true 
   become: true
   roles:
-    - make_users
     - nomad-client
-    - CNI_plugins

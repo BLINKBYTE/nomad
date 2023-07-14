@@ -2,3 +2,9 @@
 nomad_api_addr: nomad.devcastops.com
 
 nomad_user_name: nomad
+
+dc: hingashi
+domain: eorzea
+
+consul_config_dir: /etc/consul.d
+nomad_config_dir: "/etc/nomad.d"

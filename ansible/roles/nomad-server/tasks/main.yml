@@ -1,56 +1,10 @@
 ---
 
-  - name: ensure package is insatlled
-    ansible.builtin.package:
-      name: "{{item}}"
-    with_items:
-      - unzip
-
-
-
-  - name: download nomad
-    ansible.builtin.get_url:
-      url: https://releases.hashicorp.com/nomad/{{nomad_version}}/nomad_{{nomad_version}}_linux_{{architecture}}.zip
-      dest: /tmp/nomad_{{nomad_version}}.zip
-
-  - name: unzip nomad
-    ansible.builtin.unarchive:
-      src:  /tmp/nomad_{{nomad_version}}.zip
-      dest: /usr/local/bin
-      remote_src: true
-
-  - name: ensure config dir
-    ansible.builtin.file:
-      path: /etc/nomad.d
-      state: directory
-      owner: "{{nomad_user_name}}"
-      group: "{{nomad_user_name}}"
-      mode: 0744
-
-  - name: ensure data dir
-    ansible.builtin.file:
-      path: /var/lib/nomad
-      state: directory
-      owner: "{{nomad_user_name}}"
-      group: "{{nomad_user_name}}"
-      mode: 0744
-
-  - name: nomad config.hcl
-    ansible.builtin.template:
-      src: ./config.hcl.j2
-      dest: /etc/nomad.d/config.hcl
-      owner: "{{nomad_user_name}}"
-      group: "{{nomad_user_name}}"
-      mode: 0744
-
-  - name: nomad.service
-    ansible.builtin.template:
-      src: nomad.service
-      dest: /etc/systemd/system/nomad.service
-
-  - name: enable service
-    ansible.builtin.systemd:
-      name: nomad
-      state: restarted
-      enabled: true
-      daemon_reload: true
+- name: nomad config.hcl
+  ansible.builtin.template:
+    src: ./config.hcl.j2
+    dest: "{{nomad_config_dir}}/config.hcl"
+    owner: "{{nomad_user_name}}"
+    group: "{{nomad_user_name}}"
+    mode: 0744
+  notify: restart nomad
