@@ -1,10 +1,10 @@
 ---
 
-- name: nomad config.hcl
+- name: Nomad config.hcl
   ansible.builtin.template:
     src: ./config.hcl.j2
-    dest: "{{nomad_config_dir}}/config.hcl"
-    owner: "{{nomad_user_name}}"
-    group: "{{nomad_user_name}}"
-    mode: 0744
-  notify: restart nomad
+    dest: "{{ nomad_config_dir }}/config.hcl"
+    owner: "{{ nomad_user_name }}"
+    group: "{{ nomad_user_name }}"
+    mode: "0744"
+  notify: Restart nomad

@@ -1,19 +1,19 @@
 ---
 
-- name: nomad-base
+- name: Nomad-base
   hosts: all
   become: true
   roles:
     - make_users
     - nomad-base
 
-- name: setup server
+- name: Setup server
   hosts: server
   become: true
   roles:
     - nomad-server
 
-- name: setup client 
+- name: Setup client
   hosts: client
   become: true
   roles:

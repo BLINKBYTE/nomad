@@ -1,9 +1,11 @@
-  - name: ensure group exsists
-    ansible.builtin.group:
-      name: "{{nomad_user_name}}"
-      state: present
+---
 
-  - name: ensure user exsists
-    ansible.builtin.user:
-      name: "{{nomad_user_name}}"
-      group: "{{nomad_user_name}}"
+- name: Ensure group exsists
+  ansible.builtin.group:
+    name: "{{ nomad_user_name }}"
+    state: present
+
+- name: Ensure user exsists
+  ansible.builtin.user:
+    name: "{{ nomad_user_name }}"
+    group: "{{ nomad_user_name }}"
